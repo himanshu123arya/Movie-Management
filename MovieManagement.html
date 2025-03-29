@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Management</title>
+    <script>
+        class Movie {
+            constructor(title, genre, director, releaseYear) {
+                this.title = title;
+                this.genre = genre;
+                this.director = director;
+                this.releaseYear = releaseYear;
+                this.ratings = [];
+            }
+
+            addRating(rating) {
+                this.ratings.push(rating);
+            }
+
+            getAverageRating() {
+                if (this.ratings.length === 0) return "No ratings yet.";
+                const sum = this.ratings.reduce((a, b) => a + b, 0);
+                return (sum / this.ratings.length).toFixed(2);
+            }
+
+            getDetails() {
+                return `Title: ${this.title}, Genre: ${this.genre}, Director: ${this.director}, Release Year: ${this.releaseYear}, Average Rating: ${this.getAverageRating()}`;
+            }
+        }
+
+        class User {
+            constructor(name) {
+                this.name = name;
+                this.watchedMovies = [];
+            }
+
+            watchMovie(movie) {
+                this.watchedMovies.push(movie.title);
+            }
+
+            rateMovie(movie, rating) {
+                if (rating < 1 || rating > 5) {
+                    throw new Error("Ratings must be between 1 and 5.");
+                }
+                movie.addRating(rating);
+            }
+
+            getWatchedMovies() {
+                return this.watchedMovies;
+            }
+        }
+
+        class MovieManager {
+            constructor() {
+                this.movies = [];
+            }
+
+            addMovie(movie) {
+                this.movies.push(movie);
+            }
+
+            searchByGenre(genre) {
+                return this.movies.filter((movie) => movie.genre.toLowerCase() === genre.toLowerCase());
+            }
+
+            listAllMovies() {
+                return this.movies.map((movie) => movie.getDetails());
+            }
+        }
+
+      
+        const movie1 = new Movie("Gadar: Ek Prem Katha", "Action", "Anil Sharma", 2001);
+        const movie2 = new Movie("Damini", "Drama", "Rajkumar Santoshi", 1993);
+        const movie3 = new Movie("Ghayal", "Action", "Rajkumar Santoshi", 1990);
+
+   
+        const user1 = new User("Himanshu Arya");
+        const user2 = new User("Uddesh");
+
+        
+        const manager = new MovieManager();
+        manager.addMovie(movie1);
+        manager.addMovie(movie2);
+        manager.addMovie(movie3);
+
+        user1.watchMovie(movie1);
+        user1.rateMovie(movie1, 5);
+
+        user2.watchMovie(movie3);
+        user2.rateMovie(movie3, 4);
+
+        console.log("All Movies:");
+        console.log(manager.listAllMovies());
+
+        console.log("Movies in Action Genre:");
+        console.log(manager.searchByGenre("Action").map((movie) => movie.getDetails()));
+
+        class AdminInterface {
+            addMovie(manager, movie) {
+                manager.addMovie(movie);
+            }
+        }
+
+        class UserInterface {
+            watchAndRateMovie(user, movie, rating) {
+                user.watchMovie(movie);
+                user.rateMovie(movie, rating);
+            }
+        }
+
+        const admin = new AdminInterface();
+        const userInterface = new UserInterface();
+
+        
+        const movie4 = new Movie("Dunkirk", "War", "Christopher Nolan", 2017);
+        admin.addMovie(manager, movie4);
+
+      
+        userInterface.watchAndRateMovie(user1, movie4, 4);
+        console.log("Updated Movies:");
+        console.log(manager.listAllMovies());
+
+        class NotificationService {
+            sendNotification(message) {
+                throw new Error("Method not implemented.");
+            }
+        }
+
+        class EmailNotificationService extends NotificationService {
+            sendNotification(message) {
+                console.log(`Email sent: ${message}`);
+            }
+        }
+
+        class SMSNotificationService extends NotificationService {
+            sendNotification(message) {
+                console.log(`SMS sent: ${message}`);
+            }
+        }
+
+        const emailService = new EmailNotificationService();
+        emailService.sendNotification("New movie 'Dunkirk' has been added!");
+
+        const smsService = new SMSNotificationService();
+        smsService.sendNotification("Don't miss 'Interstellar' streaming now!");
+    </script>
+</head>
+<body>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
